@@ -1,3 +1,4 @@
+import { Alert, Linking } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 
@@ -43,11 +44,30 @@ async function pickerResultToBase64(result: ImagePicker.ImagePickerResult): Prom
   return resizeToBase64(asset);
 }
 
+async function ensureGranted(
+  permission: ImagePicker.PermissionResponse,
+  deniedMessage: string,
+): Promise<void> {
+  switch (permission.status) {
+    case ImagePicker.PermissionStatus.GRANTED:
+      return;
+    case ImagePicker.PermissionStatus.DENIED:
+      if (!permission.canAskAgain) {
+        Alert.alert('권한이 필요합니다', `${deniedMessage} 설정에서 권한을 허용해주세요.`, [
+          { text: '취소', style: 'cancel' },
+          { text: '설정으로 이동', onPress: () => Linking.openSettings() },
+        ]);
+      }
+      throw new Error(deniedMessage);
+    case ImagePicker.PermissionStatus.UNDETERMINED:
+    default:
+      throw new Error(deniedMessage);
+  }
+}
+
 export async function takePhoto(): Promise<string | null> {
   const permission = await ImagePicker.requestCameraPermissionsAsync();
-  if (!permission.granted) {
-    throw new Error('카메라 권한이 필요합니다.');
-  }
+  await ensureGranted(permission, '카메라 권한이 필요합니다.');
 
   const result = await ImagePicker.launchCameraAsync(PICKER_OPTIONS);
   return pickerResultToBase64(result);
@@ -55,9 +75,7 @@ export async function takePhoto(): Promise<string | null> {
 
 export async function pickPhotoFromLibrary(): Promise<string | null> {
   const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  if (!permission.granted) {
-    throw new Error('사진 라이브러리 권한이 필요합니다.');
-  }
+  await ensureGranted(permission, '사진 라이브러리 권한이 필요합니다.');
 
   const result = await ImagePicker.launchImageLibraryAsync(PICKER_OPTIONS);
   return pickerResultToBase64(result);
