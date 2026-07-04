@@ -40,7 +40,11 @@ export default function Login() {
     setLoading(true);
     try {
       await verifyLoginCode(email.trim(), code.trim());
-      router.replace('/capture');
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/capture');
+      }
     } catch (error) {
       Alert.alert('오류', error instanceof Error ? error.message : '로그인에 실패했습니다.');
     } finally {
