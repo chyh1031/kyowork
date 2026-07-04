@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react';
+import { router } from 'expo-router';
 import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { generateListing } from '@/services/aiService';
 import { copyListingToClipboard, formatListingForShare } from '@/services/clipboardService';
+import { LoginRequiredError, saveListing } from '@/services/listingService';
 import { pickPhotoFromLibrary, takePhoto } from '@/services/photoService';
 import type { Listing } from '@/schemas/listing';
 
@@ -13,6 +15,7 @@ export default function Capture() {
   const [status, setStatus] = useState<Status>('idle');
   const [listing, setListing] = useState<Listing | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const lastPickRef = useRef<PickFn | null>(null);
 
   async function handlePhoto(pick: PickFn) {
@@ -36,6 +39,27 @@ export default function Capture() {
     if (!listing) return;
     await copyListingToClipboard(listing);
     Alert.alert('복사 완료', '판매글이 클립보드에 복사되었습니다.');
+  }
+
+  async function handleSave() {
+    if (!listing) return;
+
+    setSaving(true);
+    try {
+      await saveListing(listing);
+      Alert.alert('저장 완료', '등록이력에 저장됐어요.');
+    } catch (error) {
+      if (error instanceof LoginRequiredError) {
+        Alert.alert('로그인이 필요해요', '등록이력을 저장하려면 로그인해주세요.', [
+          { text: '취소', style: 'cancel' },
+          { text: '로그인하기', onPress: () => router.push('/login') },
+        ]);
+      } else {
+        Alert.alert('오류', error instanceof Error ? error.message : '저장에 실패했습니다.');
+      }
+    } finally {
+      setSaving(false);
+    }
   }
 
   function retry() {
@@ -96,6 +120,13 @@ export default function Capture() {
 
         <Pressable style={styles.button} onPress={handleCopy}>
           <Text style={styles.buttonText}>복사하기</Text>
+        </Pressable>
+        <Pressable style={styles.secondaryButton} onPress={handleSave} disabled={saving}>
+          {saving ? (
+            <ActivityIndicator />
+          ) : (
+            <Text style={styles.secondaryButtonText}>등록이력에 저장</Text>
+          )}
         </Pressable>
         <Pressable style={styles.secondaryButton} onPress={reset}>
           <Text style={styles.secondaryButtonText}>다시 만들기</Text>

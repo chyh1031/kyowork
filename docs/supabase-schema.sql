@@ -80,3 +80,33 @@ create policy "feedback is insertable by listing owner" on public.listing_feedba
   );
 
 create index if not exists listing_feedback_listing_id_idx on public.listing_feedback (listing_id);
+
+-- ============================================================
+-- 추가 마이그레이션 (S7): 신규 유저 profiles 자동 생성
+-- 위 스크립트를 이미 실행했다면, 아래 블록만 SQL Editor에서 추가로 실행하면 된다.
+-- (없으면 auth.users에는 로그인됐는데 profiles 행이 없어서 listings insert가
+--  외래키 위반으로 실패한다.)
+-- ============================================================
+
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+  insert into public.profiles (id)
+  values (new.id)
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
+
+-- 클라이언트에서 직접 upsert할 수도 있도록 안전장치 정책 추가
+drop policy if exists "profiles are insertable by owner" on public.profiles;
+create policy "profiles are insertable by owner" on public.profiles
+  for insert with check (auth.uid() = id);
