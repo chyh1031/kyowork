@@ -30,7 +30,7 @@
 
 ## Should (v1.5) — 미리 준비 가능한 것
 
-- [ ] **S1. Supabase 스키마 설계 문서만 작성** — `server/` 또는 `docs/`에 `listings`, `users`, `feedback`(판매완료 피드백) 테이블 스키마안을 SQL DDL로 작성 (실제 Supabase 프로젝트 연결 없이 문서만). 완료 기준: DDL 파일 존재, 필드가 `mobile/src/schemas/listing.ts`와 호환.
+- [x] **S1. Supabase 스키마 설계 문서만 작성** — `server/` 또는 `docs/`에 `listings`, `users`, `feedback`(판매완료 피드백) 테이블 스키마안을 SQL DDL로 작성 (실제 Supabase 프로젝트 연결 없이 문서만). 완료 기준: DDL 파일 존재, 필드가 `mobile/src/schemas/listing.ts`와 호환.
 - [ ] **S2. 마이페이지 정적 화면 스캐폴딩** — 데이터 연동 없이 더미 데이터로 "내가 등록한 물건 목록" UI만. `app/mypage.tsx`. 완료 기준: typecheck/lint/번들 통과.
 - [ ] **S3. 🛑 사람 확인 필요 — Supabase 프로젝트 생성/키 발급** — 계정 소유가 필요해 자동 진행 불가.
 - [ ] **S4. 🛑 사람 확인 필요 — 공유카드 이미지 실제 디자인 확정** — 브랜딩/톤 결정이 필요해 자동 진행 불가. 기술 스파이크(react-native-view-shot 등 후보 조사)까지는 자동 진행 가능.
