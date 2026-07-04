@@ -18,7 +18,7 @@
 
 ## Must (v1 MVP) 잔여 작업
 
-- [ ] **M1. 서버 mock 모드** — `ANTHROPIC_API_KEY`가 없거나 `MOCK_AI=true`일 때 `server/lib/anthropic.ts`가 고정 fixture listing을 반환하도록 분기 추가. 실제 API 키 없이도 전체 플로우(모바일→서버→응답) 검증 가능해야 함. 완료 기준: 키 없이 `vercel dev` 또는 로컬 핸들러 호출 시 유효한 `Listing` JSON 반환.
+- [x] **M1. 서버 mock 모드** — `ANTHROPIC_API_KEY`가 없거나 `MOCK_AI=true`일 때 `server/lib/anthropic.ts`가 고정 fixture listing을 반환하도록 분기 추가. 실제 API 키 없이도 전체 플로우(모바일→서버→응답) 검증 가능해야 함. 완료 기준: 키 없이 `vercel dev` 또는 로컬 핸들러 호출 시 유효한 `Listing` JSON 반환.
 - [ ] **M2. 서버 입력 검증 강화** — `photoBase64` 크기 상한(예: 6MB, base64 기준) 초과 시 400 응답. 완료 기준: 유닛 테스트로 초과/정상 케이스 모두 검증.
 - [ ] **M3. 서버 유닛 테스트 도입** — `vitest` 설치, `api/generate.ts` 핸들러를 mock Anthropic 클라이언트로 테스트(성공/400/502 케이스). 완료 기준: `npm test` 통과, 실제 Anthropic API 호출 없음.
 - [ ] **M4. 모바일 이미지 리사이즈** — `expo-image-manipulator`로 전송 전 장변 1024px, quality 0.6 리사이즈 후 base64 인코딩. `photoService.ts`에 적용. 완료 기준: typecheck/lint 통과 + 번들 검증.

@@ -3,6 +3,21 @@ import { listingSchema, type Listing } from './schema';
 
 const MODEL = process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-5';
 
+const MOCK_LISTING: Listing = listingSchema.parse({
+  title: '[MOCK] 아이폰 13 프로 256GB 그래파이트',
+  description:
+    '실사용 흠집 거의 없고 배터리 성능 89%입니다. 정품 박스, 충전기 포함해서 드립니다. ' +
+    '직거래 선호하며 택배거래도 가능합니다. (이 데이터는 MOCK_AI 모드의 고정 fixture입니다)',
+  category: '전자기기',
+  price: 650000,
+  priceRangeMin: 600000,
+  priceRangeMax: 700000,
+});
+
+function shouldUseMock(): boolean {
+  return process.env.MOCK_AI === 'true' || !process.env.ANTHROPIC_API_KEY;
+}
+
 let client: Anthropic | null = null;
 
 function getClient(): Anthropic {
@@ -37,6 +52,10 @@ export async function generateListingFromPhoto(
   photoBase64: string,
   mediaType: 'image/jpeg' | 'image/png' = 'image/jpeg',
 ): Promise<Listing> {
+  if (shouldUseMock()) {
+    return MOCK_LISTING;
+  }
+
   const anthropic = getClient();
 
   const message = await anthropic.messages.create({
