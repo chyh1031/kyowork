@@ -51,6 +51,7 @@ Must/자동화/미리 준비 가능한 Should 항목은 모두 처리 완료됨.
 - [x] **S6. Auth 화면 (이메일 OTP 코드)** — 매직링크 대신 딥링크 설정이 필요 없는 6자리 코드 입력 방식으로 구현 (`app/login.tsx`, `src/lib/auth.ts`). 완료 기준: typecheck/lint/번들 통과. ⚠️ 실제 이메일 발송·수신은 이 환경에서 검증 불가 — Supabase 대시보드 Authentication → Email Templates에서 "Magic Link" 템플릿에 `{{ .Token }}`이 포함돼 있는지 확인 필요 (기본 템플릿에 없으면 코드가 이메일에 안 옴).
 - [x] **S7. 등록이력 저장** — `src/services/listingService.ts` (`saveListing`, `LoginRequiredError`), `capture.tsx`에 "등록이력에 저장" 버튼 + 미로그인 시 로그인 유도 Alert. 완료 기준: typecheck/lint/번들 통과 + RLS로 익명 insert 차단 확인(REST 401 확인 완료). ⚠️ `docs/supabase-schema.sql` 맨 아래 "추가 마이그레이션 (S7)" 블록(신규 유저 profiles 자동 생성 트리거)을 Supabase SQL Editor에서 아직 실행 안 했다면 실제 로그인 후 저장 시 외래키 위반으로 실패함 — 꼭 실행 필요.
 - [x] **S8. 마이페이지 실제 데이터 연결** — `mypage.tsx`의 더미 배열을 `fetchMyListings()` 조회로 교체, 로그인 필요/에러/빈 목록 상태 처리. 완료 기준: typecheck/lint/번들 통과.
+- [x] **S9. 판매완료 피드백 입력** — 기획서상 데이터 플라이휠 핵심(우선순위 최상단). `listing_feedback`에 실제 판매가 저장 + `listings.status`를 `sold`로 갱신. `app/feedback.tsx` (listingId 파라미터) + `mypage.tsx`에서 active 항목에 진입 버튼. 완료 기준: typecheck/lint/번들 통과.
 
 ---
 

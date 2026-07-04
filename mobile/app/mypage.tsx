@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { router } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { fetchMyListings, LoginRequiredError, type SavedListing } from '@/services/listingService';
@@ -16,9 +16,8 @@ export default function MyPage() {
   const [status, setStatus] = useState<Status>('loading');
   const [listings, setListings] = useState<SavedListing[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [reloadKey, setReloadKey] = useState(0);
 
-  useEffect(() => {
+  const loadListings = useCallback(() => {
     fetchMyListings()
       .then((result) => {
         setListings(result);
@@ -32,11 +31,19 @@ export default function MyPage() {
           setStatus('error');
         }
       });
-  }, [reloadKey]);
+  }, []);
+
+  // 화면에 포커스될 때마다 재조회 (판매완료 등록 후 돌아왔을 때 갱신 목적)
+  useFocusEffect(
+    useCallback(() => {
+      setStatus('loading');
+      loadListings();
+    }, [loadListings]),
+  );
 
   function retry() {
     setStatus('loading');
-    setReloadKey((key) => key + 1);
+    loadListings();
   }
 
   if (status === 'loading') {
@@ -83,9 +90,23 @@ export default function MyPage() {
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.price}>{item.price.toLocaleString('ko-KR')}원</Text>
           </View>
-          <Text style={item.status === 'active' ? styles.activeBadge : styles.soldBadge}>
-            {STATUS_LABEL[item.status]}
-          </Text>
+          <View style={styles.cardRight}>
+            <Text style={item.status === 'active' ? styles.activeBadge : styles.soldBadge}>
+              {STATUS_LABEL[item.status]}
+            </Text>
+            {item.status === 'active' ? (
+              <Pressable
+                onPress={() =>
+                  router.push({
+                    pathname: '/feedback',
+                    params: { listingId: item.id, title: item.title },
+                  })
+                }
+              >
+                <Text style={styles.feedbackLink}>판매완료 등록</Text>
+              </Pressable>
+            ) : null}
+          </View>
         </View>
       )}
     />
@@ -135,6 +156,10 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#555',
   },
+  cardRight: {
+    alignItems: 'flex-end',
+    gap: 6,
+  },
   activeBadge: {
     fontSize: 12,
     fontWeight: '600',
@@ -144,6 +169,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#999',
+  },
+  feedbackLink: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#111',
+    textDecorationLine: 'underline',
   },
   button: {
     backgroundColor: '#111',

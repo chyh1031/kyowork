@@ -61,3 +61,27 @@ export async function fetchMyListings(): Promise<SavedListing[]> {
     createdAt: row.created_at as string,
   }));
 }
+
+export async function submitSoldFeedback(listingId: string, soldPrice: number): Promise<void> {
+  const session = await getSession();
+  if (!session) {
+    throw new LoginRequiredError();
+  }
+
+  const { error: feedbackError } = await supabase
+    .from('listing_feedback')
+    .insert({ listing_id: listingId, sold_price: soldPrice });
+
+  if (feedbackError) {
+    throw new Error(feedbackError.message);
+  }
+
+  const { error: updateError } = await supabase
+    .from('listings')
+    .update({ status: 'sold' })
+    .eq('id', listingId);
+
+  if (updateError) {
+    throw new Error(updateError.message);
+  }
+}
