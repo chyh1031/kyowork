@@ -153,3 +153,19 @@ iOSInjectionProject/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.gitignore.io/api/git,xcode,macos,swift,cocoapods
+
+### Node / Expo / Vercel ###
+node_modules/
+.env
+.env.local
+.env*.local
+npm-debug.log*
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Vercel
+.vercel/

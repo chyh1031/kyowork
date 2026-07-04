@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "MiddlePoint",
+    "slug": "middlepoint",
+    "scheme": "middlepoint",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "판매할 물건 사진을 촬영해 AI로 판매글을 생성하기 위해 카메라를 사용합니다.",
+        "NSPhotoLibraryUsageDescription": "판매할 물건 사진을 앨범에서 선택해 AI로 판매글을 생성하기 위해 접근합니다."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "판매할 물건 사진을 앨범에서 선택해 AI로 판매글을 생성하기 위해 접근합니다."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "판매할 물건 사진을 촬영해 AI로 판매글을 생성하기 위해 카메라를 사용합니다."
+        }
+      ]
+    ]
+  }
+}
