@@ -5,6 +5,7 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ title: 'MiddlePoint' }} />
       <Stack.Screen name="capture" options={{ title: '판매글 만들기' }} />
+      <Stack.Screen name="mypage" options={{ title: '마이페이지' }} />
     </Stack>
   );
 }
