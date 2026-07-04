@@ -86,8 +86,9 @@ export default function Capture() {
         <Text style={styles.value}>{listing.description}</Text>
 
         <Text style={styles.label}>예상 가격</Text>
-        <Text style={styles.value}>
-          {listing.price.toLocaleString('ko-KR')}원 (참고용, {listing.priceRangeMin.toLocaleString('ko-KR')}
+        <Text style={styles.value}>{listing.price.toLocaleString('ko-KR')}원</Text>
+        <Text style={styles.caption}>
+          AI가 추천한 참고 가격이며 실제 거래가와 다를 수 있어요 ({listing.priceRangeMin.toLocaleString('ko-KR')}
           ~{listing.priceRangeMax.toLocaleString('ko-KR')}원)
         </Text>
 
@@ -137,6 +138,11 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
+  },
+  caption: {
+    marginTop: 4,
+    fontSize: 12,
+    color: '#999',
   },
   preview: {
     marginTop: 16,
