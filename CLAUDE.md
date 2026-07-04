@@ -22,7 +22,7 @@
 - `api/generate.ts` — POST `/api/generate`, body `{ photoBase64 }` → `{ listing }`
 - `lib/anthropic.ts` — Claude Vision 호출, tool-use로 구조화된 JSON 강제 추출 (자유형 JSON 파싱보다 안정적)
 - 모델은 `ANTHROPIC_MODEL` 환경변수로 교체 가능 (기본값 `claude-sonnet-5`) — 비용 튜닝 시 Haiku 등으로 전환 고려
-- 명령어: `npm run dev` (vercel dev) / `npm run lint` / `npm run typecheck`
+- 명령어: `npm run dev` (vercel dev) / `npm run lint` / `npm run typecheck` / `npm test` (vitest, 실제 API 호출 없음)
 - 환경변수: `.env.example` 참고 (`ANTHROPIC_API_KEY`)
 - Vercel 프로젝트 연결 시 Root Directory를 `server`로 설정
 
