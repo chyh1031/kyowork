@@ -24,7 +24,7 @@
 - [x] **M4. 모바일 이미지 리사이즈** — `expo-image-manipulator`로 전송 전 장변 1024px, quality 0.6 리사이즈 후 base64 인코딩. `photoService.ts`에 적용. 완료 기준: typecheck/lint 통과 + 번들 검증.
 - [x] **M5. AI 생성 타임아웃/재시도 UI** — `aiService.ts`에 `AbortController` 15초 타임아웃 추가. `capture.tsx`에 실패 시 "다시 시도" 버튼 노출(현재는 Alert만 있음). 완료 기준: 타임아웃/네트워크 에러 시 result 화면이 아닌 재시도 UI로 이동하는 상태 분기 코드 확인.
 - [x] **M6. 권한 거부 처리** — `photoService.ts`에서 카메라/앨범 권한이 "다시 묻지 않음"으로 거부된 경우 `Linking.openSettings()`로 유도하는 Alert 분기 추가. 완료 기준: 권한 상태별(`granted`/`denied`/`undetermined`) 분기 로직 존재.
-- [ ] **M7. 온보딩 1회만 표시** — `@react-native-async-storage/async-storage` 설치, 최초 실행 여부 저장. `app/_layout.tsx`에서 완료 여부에 따라 `index`(온보딩) 또는 `capture`로 초기 분기. 완료 기준: typecheck/lint 통과 + 로직에 대한 간단한 유닛 테스트(순수 함수로 분리해서 테스트 가능하게).
+- [x] **M7. 온보딩 1회만 표시** — `@react-native-async-storage/async-storage` 설치, 최초 실행 여부 저장. `app/_layout.tsx`에서 완료 여부에 따라 `index`(온보딩) 또는 `capture`로 초기 분기. 완료 기준: typecheck/lint 통과 + 로직에 대한 간단한 유닛 테스트(순수 함수로 분리해서 테스트 가능하게).
 - [ ] **M8. 참고 가격 문구 노출** — `capture.tsx` 결과 화면에 "AI 추천 참고가이며 실제 거래가와 다를 수 있어요" 같은 문구를 가격 옆에 상시 노출(기획서 리스크 대응). 완료 기준: 화면 코드에 해당 문구 렌더링 확인.
 - [ ] **M9. 🛑 사람 확인 필요 — 실기기 테스트** — 여기 도달하면 멈추고 보고만 한다. 물리 기기/EAS 빌드가 필요해 이 환경에서 수행 불가.
 

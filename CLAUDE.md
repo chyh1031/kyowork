@@ -14,7 +14,7 @@
 - `src/services/` — photoService(카메라/앨범), aiService(서버 프록시 호출), clipboardService(복사)
 - `src/schemas/listing.ts` — AI 응답 zod 스키마. **`server/lib/schema.ts`와 필드가 반드시 일치해야 함** (모노레포 공유 패키지 없이 수동 동기화 — MVP 단계라 의도적으로 단순하게 유지)
 - import 별칭 `@/*` → `src/*`
-- 명령어: `npm start` / `npm run ios` / `npm run android` / `npm run lint` / `npm run typecheck` / `npm run format`
+- 명령어: `npm start` / `npm run ios` / `npm run android` / `npm run lint` / `npm run typecheck` / `npm run format` / `npm test` (vitest, 순수 로직만 — 컴포넌트 렌더링 테스트 아님)
 - 환경변수: `.env.example` 참고 (`EXPO_PUBLIC_API_BASE_URL`)
 
 ## server/ (Vercel Functions)
