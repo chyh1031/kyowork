@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { router, useFocusEffect } from 'expo-router';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { signOut } from '@/lib/auth';
 import { fetchMyListings, LoginRequiredError, type SavedListing } from '@/services/listingService';
 
 type Status = 'loading' | 'needsLogin' | 'error' | 'ready';
@@ -46,6 +47,11 @@ export default function MyPage() {
     loadListings();
   }
 
+  async function handleSignOut() {
+    await signOut();
+    setStatus('needsLogin');
+  }
+
   if (status === 'loading') {
     return (
       <View style={styles.center}>
@@ -82,7 +88,14 @@ export default function MyPage() {
       data={listings}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
-      ListHeaderComponent={<Text style={styles.header}>내가 등록한 물건</Text>}
+      ListHeaderComponent={
+        <View style={styles.headerRow}>
+          <Text style={styles.header}>내가 등록한 물건</Text>
+          <Pressable onPress={handleSignOut}>
+            <Text style={styles.feedbackLink}>로그아웃</Text>
+          </Pressable>
+        </View>
+      }
       ListEmptyComponent={<Text style={styles.hint}>아직 등록한 물건이 없어요.</Text>}
       renderItem={({ item }) => (
         <View style={styles.card}>
@@ -125,10 +138,15 @@ const styles = StyleSheet.create({
     padding: 24,
     flexGrow: 1,
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
   header: {
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 16,
   },
   hint: {
     color: '#555',
