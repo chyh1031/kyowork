@@ -48,7 +48,7 @@ Must/자동화/미리 준비 가능한 Should 항목은 모두 처리 완료됨.
 - [x] **S3. Supabase 프로젝트 생성/키 발급** — 완료. 프로젝트 URL/anon key 확보, `docs/supabase-schema.sql` 적용 완료.
 - [x] (스파이크만 완료, 디자인 확정은 미완) **S4. 🛑 사람 확인 필요 — 공유카드 이미지 실제 디자인 확정** — 기술 후보 조사는 `docs/share-card-spike.md`로 완료. 브랜딩/톤/최종 라이브러리 확정은 사람 판단 필요해 자동 진행 불가.
 - [x] **S5. Supabase 클라이언트 설정** — `@supabase/supabase-js` 설치, `mobile/src/lib/supabase.ts` 클라이언트 생성, `EXPO_PUBLIC_SUPABASE_URL`/`EXPO_PUBLIC_SUPABASE_ANON_KEY` env 배선. 완료 기준: typecheck/lint/번들 통과 + 간단한 연결 스모크 체크.
-- [ ] **S6. Auth 화면 (이메일 매직링크)** — 로그인/회원가입 화면, Supabase Auth 이메일 매직링크 방식. 완료 기준: typecheck/lint/번들 통과.
+- [x] **S6. Auth 화면 (이메일 OTP 코드)** — 매직링크 대신 딥링크 설정이 필요 없는 6자리 코드 입력 방식으로 구현 (`app/login.tsx`, `src/lib/auth.ts`). 완료 기준: typecheck/lint/번들 통과. ⚠️ 실제 이메일 발송·수신은 이 환경에서 검증 불가 — Supabase 대시보드 Authentication → Email Templates에서 "Magic Link" 템플릿에 `{{ .Token }}`이 포함돼 있는지 확인 필요 (기본 템플릿에 없으면 코드가 이메일에 안 옴).
 - [ ] **S7. 등록이력 저장** — `capture.tsx`에서 AI 생성된 listing을 `listings` 테이블에 저장하는 로직 추가 (로그인 안 된 상태면 로그인 유도). 완료 기준: typecheck/lint/번들 통과.
 - [ ] **S8. 마이페이지 실제 데이터 연결** — `mypage.tsx`의 더미 배열을 `listings` 테이블 조회로 교체. 완료 기준: typecheck/lint/번들 통과.
 
