@@ -15,4 +15,10 @@ export const env = {
   get apiBaseUrl() {
     return readEnv('EXPO_PUBLIC_API_BASE_URL');
   },
+  get supabaseUrl() {
+    return readEnv('EXPO_PUBLIC_SUPABASE_URL');
+  },
+  get supabaseAnonKey() {
+    return readEnv('EXPO_PUBLIC_SUPABASE_ANON_KEY');
+  },
 };

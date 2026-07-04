@@ -45,8 +45,12 @@ Must/자동화/미리 준비 가능한 Should 항목은 모두 처리 완료됨.
 
 - [x] **S1. Supabase 스키마 설계 문서만 작성** — `server/` 또는 `docs/`에 `listings`, `users`, `feedback`(판매완료 피드백) 테이블 스키마안을 SQL DDL로 작성 (실제 Supabase 프로젝트 연결 없이 문서만). 완료 기준: DDL 파일 존재, 필드가 `mobile/src/schemas/listing.ts`와 호환.
 - [x] **S2. 마이페이지 정적 화면 스캐폴딩** — 데이터 연동 없이 더미 데이터로 "내가 등록한 물건 목록" UI만. `app/mypage.tsx`. 완료 기준: typecheck/lint/번들 통과.
-- [ ] **S3. 🛑 사람 확인 필요 — Supabase 프로젝트 생성/키 발급** — 계정 소유가 필요해 자동 진행 불가.
+- [x] **S3. Supabase 프로젝트 생성/키 발급** — 완료. 프로젝트 URL/anon key 확보, `docs/supabase-schema.sql` 적용 완료.
 - [x] (스파이크만 완료, 디자인 확정은 미완) **S4. 🛑 사람 확인 필요 — 공유카드 이미지 실제 디자인 확정** — 기술 후보 조사는 `docs/share-card-spike.md`로 완료. 브랜딩/톤/최종 라이브러리 확정은 사람 판단 필요해 자동 진행 불가.
+- [x] **S5. Supabase 클라이언트 설정** — `@supabase/supabase-js` 설치, `mobile/src/lib/supabase.ts` 클라이언트 생성, `EXPO_PUBLIC_SUPABASE_URL`/`EXPO_PUBLIC_SUPABASE_ANON_KEY` env 배선. 완료 기준: typecheck/lint/번들 통과 + 간단한 연결 스모크 체크.
+- [ ] **S6. Auth 화면 (이메일 매직링크)** — 로그인/회원가입 화면, Supabase Auth 이메일 매직링크 방식. 완료 기준: typecheck/lint/번들 통과.
+- [ ] **S7. 등록이력 저장** — `capture.tsx`에서 AI 생성된 listing을 `listings` 테이블에 저장하는 로직 추가 (로그인 안 된 상태면 로그인 유도). 완료 기준: typecheck/lint/번들 통과.
+- [ ] **S8. 마이페이지 실제 데이터 연결** — `mypage.tsx`의 더미 배열을 `listings` 테이블 조회로 교체. 완료 기준: typecheck/lint/번들 통과.
 
 ---
 
