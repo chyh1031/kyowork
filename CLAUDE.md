@@ -34,7 +34,8 @@
 
 ## 아직 없는 것 (다음 단계)
 
-- Supabase Auth/등록이력 저장 (2주차 예정)
+- Supabase Auth/등록이력 저장/마이페이지 연동은 구현 완료 (BACKLOG S5~S8). 단, `docs/supabase-schema.sql` 맨 아래 "추가 마이그레이션 (S7)" 블록을 SQL Editor에서 실행해야 신규 로그인 시 저장이 동작함
+- 판매완료 피드백 입력 UI (listing_feedback 테이블은 준비됐으나 UI 없음, v1.5 남은 부분)
 - 공유카드 이미지 생성 (3주차 예정)
 - 실제 Claude Vision 프롬프트 튜닝 및 가격 정확도 검증 (아직 실기기/실API 테스트 안 됨)
 

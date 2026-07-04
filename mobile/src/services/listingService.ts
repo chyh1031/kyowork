@@ -29,3 +29,35 @@ export async function saveListing(listing: Listing): Promise<void> {
     throw new Error(error.message);
   }
 }
+
+export type SavedListing = {
+  id: string;
+  title: string;
+  price: number;
+  status: 'active' | 'sold' | 'archived';
+  createdAt: string;
+};
+
+export async function fetchMyListings(): Promise<SavedListing[]> {
+  const session = await getSession();
+  if (!session) {
+    throw new LoginRequiredError();
+  }
+
+  const { data, error } = await supabase
+    .from('listings')
+    .select('id, title, price, status, created_at')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return (data ?? []).map((row) => ({
+    id: row.id as string,
+    title: row.title as string,
+    price: row.price as number,
+    status: row.status as SavedListing['status'],
+    createdAt: row.created_at as string,
+  }));
+}
