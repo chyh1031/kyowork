@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { generateListing } from '@/services/aiService';
@@ -6,13 +6,18 @@ import { copyListingToClipboard, formatListingForShare } from '@/services/clipbo
 import { pickPhotoFromLibrary, takePhoto } from '@/services/photoService';
 import type { Listing } from '@/schemas/listing';
 
-type Status = 'idle' | 'loading' | 'result';
+type Status = 'idle' | 'loading' | 'result' | 'error';
+type PickFn = () => Promise<string | null>;
 
 export default function Capture() {
   const [status, setStatus] = useState<Status>('idle');
   const [listing, setListing] = useState<Listing | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const lastPickRef = useRef<PickFn | null>(null);
 
-  async function handlePhoto(pick: () => Promise<string | null>) {
+  async function handlePhoto(pick: PickFn) {
+    lastPickRef.current = pick;
+
     try {
       const base64 = await pick();
       if (!base64) return;
@@ -22,8 +27,8 @@ export default function Capture() {
       setListing(result);
       setStatus('result');
     } catch (error) {
-      setStatus('idle');
-      Alert.alert('오류', error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.');
+      setErrorMessage(error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.');
+      setStatus('error');
     }
   }
 
@@ -33,8 +38,18 @@ export default function Capture() {
     Alert.alert('복사 완료', '판매글이 클립보드에 복사되었습니다.');
   }
 
+  function retry() {
+    const pick = lastPickRef.current;
+    setErrorMessage(null);
+    setStatus('idle');
+    if (pick) {
+      handlePhoto(pick);
+    }
+  }
+
   function reset() {
     setListing(null);
+    setErrorMessage(null);
     setStatus('idle');
   }
 
@@ -43,6 +58,20 @@ export default function Capture() {
       <View style={styles.center}>
         <ActivityIndicator size="large" />
         <Text style={styles.hint}>AI가 판매글을 생성하고 있어요...</Text>
+      </View>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.hint}>{errorMessage}</Text>
+        <Pressable style={styles.button} onPress={retry}>
+          <Text style={styles.buttonText}>다시 시도</Text>
+        </Pressable>
+        <Pressable style={styles.secondaryButton} onPress={reset}>
+          <Text style={styles.secondaryButtonText}>처음으로</Text>
+        </Pressable>
       </View>
     );
   }
