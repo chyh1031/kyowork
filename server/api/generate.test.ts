@@ -63,6 +63,20 @@ describe('POST /api/generate', () => {
     expect(createMock).not.toHaveBeenCalled();
   });
 
+  it('rejects a photoBase64 payload larger than the 6MB limit with 400', async () => {
+    process.env.MOCK_AI = 'true';
+    const req = {
+      method: 'POST',
+      body: { photoBase64: 'a'.repeat(6 * 1024 * 1024 + 1) },
+    } as VercelRequest;
+    const res = createRes();
+
+    await handler(req, res);
+
+    expect(res.statusCode).toBe(400);
+    expect(createMock).not.toHaveBeenCalled();
+  });
+
   it('returns the mock listing without calling the Anthropic API', async () => {
     process.env.MOCK_AI = 'true';
     const req = { method: 'POST', body: { photoBase64: 'fake-data' } } as VercelRequest;
