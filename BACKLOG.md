@@ -21,7 +21,7 @@
 - [x] **M1. 서버 mock 모드** — `ANTHROPIC_API_KEY`가 없거나 `MOCK_AI=true`일 때 `server/lib/anthropic.ts`가 고정 fixture listing을 반환하도록 분기 추가. 실제 API 키 없이도 전체 플로우(모바일→서버→응답) 검증 가능해야 함. 완료 기준: 키 없이 `vercel dev` 또는 로컬 핸들러 호출 시 유효한 `Listing` JSON 반환.
 - [x] **M2. 서버 유닛 테스트 도입** — `vitest` 설치, `api/generate.ts` 핸들러를 mock Anthropic 클라이언트로 테스트(성공/400/502 케이스, M1 mock 모드 포함). 완료 기준: `npm test` 통과, 실제 Anthropic API 호출 없음. (M3보다 먼저 처리 — M3가 이 테스트 인프라를 필요로 함)
 - [x] **M3. 서버 입력 검증 강화** — `photoBase64` 크기 상한(예: 6MB, base64 기준) 초과 시 400 응답. 완료 기준: M2에서 도입한 vitest로 초과/정상 케이스 모두 검증.
-- [ ] **M4. 모바일 이미지 리사이즈** — `expo-image-manipulator`로 전송 전 장변 1024px, quality 0.6 리사이즈 후 base64 인코딩. `photoService.ts`에 적용. 완료 기준: typecheck/lint 통과 + 번들 검증.
+- [x] **M4. 모바일 이미지 리사이즈** — `expo-image-manipulator`로 전송 전 장변 1024px, quality 0.6 리사이즈 후 base64 인코딩. `photoService.ts`에 적용. 완료 기준: typecheck/lint 통과 + 번들 검증.
 - [ ] **M5. AI 생성 타임아웃/재시도 UI** — `aiService.ts`에 `AbortController` 15초 타임아웃 추가. `capture.tsx`에 실패 시 "다시 시도" 버튼 노출(현재는 Alert만 있음). 완료 기준: 타임아웃/네트워크 에러 시 result 화면이 아닌 재시도 UI로 이동하는 상태 분기 코드 확인.
 - [ ] **M6. 권한 거부 처리** — `photoService.ts`에서 카메라/앨범 권한이 "다시 묻지 않음"으로 거부된 경우 `Linking.openSettings()`로 유도하는 Alert 분기 추가. 완료 기준: 권한 상태별(`granted`/`denied`/`undetermined`) 분기 로직 존재.
 - [ ] **M7. 온보딩 1회만 표시** — `@react-native-async-storage/async-storage` 설치, 최초 실행 여부 저장. `app/_layout.tsx`에서 완료 여부에 따라 `index`(온보딩) 또는 `capture`로 초기 분기. 완료 기준: typecheck/lint 통과 + 로직에 대한 간단한 유닛 테스트(순수 함수로 분리해서 테스트 가능하게).
