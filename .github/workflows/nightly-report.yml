@@ -1,0 +1,31 @@
+name: Nightly Factory Report
+# 매일 밤 11시(KST) — 오늘 진행분 요약 + 내일 우선순위 제안 이슈 생성
+# 형이 출근길에 이 이슈 하나만 보면 공장 상태 파악 끝
+on:
+  schedule:
+    - cron: '0 14 * * *'   # UTC 14:00 = KST 23:00
+  workflow_dispatch:         # 수동 실행 버튼
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            지난 24시간 커밋·PR·이슈를 확인하고 "📊 야간 리포트 YYYY-MM-DD" 제목의
+            이슈를 하나 생성하라. 내용(각 항목 3줄 이내, 간결·직결):
+            1) 오늘 완료: 머지된 것, 열린 PR
+            2) 막힌 것: 실패한 CI, 답변 대기 중인 질문
+            3) 내일 제안: 우선순위 상위 2개 + 사유 한 줄
+            4) 리스크: 있으면만 (없으면 "없음")
+            활동이 전혀 없으면 이슈를 만들지 말 것.
