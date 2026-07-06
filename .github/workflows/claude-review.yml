@@ -1,0 +1,31 @@
+name: Claude PR Review
+# 모든 PR 오픈/업데이트 시 자동 코드리뷰 (형이 폰에서 머지 판단할 근거 제공)
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  group: review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            이 PR을 리뷰하라. CLAUDE.md 규칙 기준.
+            출력 형식(간결하게):
+            1) 머지 판정: ✅안전 / ⚠️조건부 / ❌보류 — 한 줄 사유
+            2) 버그·보안 이슈 (있으면만)
+            3) 테스트 커버 여부
+            사소한 스타일 지적은 생략. 결론 먼저.
