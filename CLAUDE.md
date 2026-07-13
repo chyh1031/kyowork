@@ -35,7 +35,7 @@
 ## 아직 없는 것 (다음 단계)
 
 - Supabase Auth/등록이력 저장/마이페이지 연동은 구현 완료 (BACKLOG S5~S8). 단, `docs/supabase-schema.sql` 맨 아래 "추가 마이그레이션 (S7)" 블록을 SQL Editor에서 실행해야 신규 로그인 시 저장이 동작함
-- 공유카드 이미지 생성 (3주차 예정)
+- 공유카드 이미지 생성 기본 구현 완료 (BACKLOG S4, react-native-view-shot 방식). 색상/로고 등 정식 브랜딩은 `mobile/src/components/ShareCard.tsx` 스타일만 교체하면 됨
 - 실제 Claude Vision 프롬프트 튜닝 및 가격 정확도 검증 (아직 실기기/실API 테스트 안 됨)
 
 ## 다음 작업 목록

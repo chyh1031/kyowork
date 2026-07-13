@@ -2,10 +2,12 @@ import { useRef, useState } from 'react';
 import { router } from 'expo-router';
 import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import ShareCard from '@/components/ShareCard';
 import { generateListing } from '@/services/aiService';
 import { copyListingToClipboard, formatListingForShare } from '@/services/clipboardService';
 import { LoginRequiredError, saveListing } from '@/services/listingService';
 import { pickPhotoFromLibrary, takePhoto } from '@/services/photoService';
+import { shareCardFromRef } from '@/services/shareCardService';
 import type { Listing } from '@/schemas/listing';
 
 type Status = 'idle' | 'loading' | 'result' | 'error';
@@ -16,7 +18,9 @@ export default function Capture() {
   const [listing, setListing] = useState<Listing | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [sharingCard, setSharingCard] = useState(false);
   const lastPickRef = useRef<PickFn | null>(null);
+  const cardRef = useRef<View>(null);
 
   async function handlePhoto(pick: PickFn) {
     lastPickRef.current = pick;
@@ -59,6 +63,17 @@ export default function Capture() {
       }
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleShareCard() {
+    setSharingCard(true);
+    try {
+      await shareCardFromRef(cardRef);
+    } catch (error) {
+      Alert.alert('오류', error instanceof Error ? error.message : '카드 공유에 실패했습니다.');
+    } finally {
+      setSharingCard(false);
     }
   }
 
@@ -128,9 +143,20 @@ export default function Capture() {
             <Text style={styles.secondaryButtonText}>등록이력에 저장</Text>
           )}
         </Pressable>
+        <Pressable style={styles.secondaryButton} onPress={handleShareCard} disabled={sharingCard}>
+          {sharingCard ? (
+            <ActivityIndicator />
+          ) : (
+            <Text style={styles.secondaryButtonText}>카드 이미지로 공유</Text>
+          )}
+        </Pressable>
         <Pressable style={styles.secondaryButton} onPress={reset}>
           <Text style={styles.secondaryButtonText}>다시 만들기</Text>
         </Pressable>
+
+        <View style={styles.offscreen} pointerEvents="none">
+          <ShareCard ref={cardRef} listing={listing} />
+        </View>
       </ScrollView>
     );
   }
@@ -158,6 +184,11 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
     gap: 8,
+  },
+  offscreen: {
+    position: 'absolute',
+    top: 0,
+    left: -9999,
   },
   hint: {
     color: '#555',
