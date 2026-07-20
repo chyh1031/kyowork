@@ -21,6 +21,8 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: |
+            --model claude-sonnet-5
           prompt: |
             지난 24시간 커밋·PR·이슈를 확인하고 "📊 야간 리포트 YYYY-MM-DD" 제목의
             이슈를 하나 생성하라. 내용(각 항목 3줄 이내, 간결·직결):
